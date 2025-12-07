@@ -1,0 +1,17 @@
+version: 1.0
+
+workflows:
+  ios-workflow:
+    name: Build iOS
+    platform: ios
+    flutter:
+      channel: stable
+    build:
+      ios:
+        flutter: true
+        build_mode: release
+        targets:
+          - app
+    environment:
+      vars:
+        BUILD_FLAVOR: "prod"
