@@ -3,28 +3,12 @@ workflows:
     name: Telegram iOS Bazel Build
     max_build_duration: 120
     environment:
-      groups:
-        - api_credentials  # Yeh aapka custom group hai jisme API_KEY aur API_HASH hai
-      vars:
-        API_KEY: "$API_KEY"   # Codemagic environment se API_KEY ko fetch karna
-        API_HASH: "$API_HASH" # Codemagic environment se API_HASH ko fetch karna
-
+      xcode: latest
     scripts:
-      - name: Install Bazelisk
+      - name: Init submodules
         script: |
-          brew install bazelisk
-          bazelisk version
+          git submodule update --init --recursive
 
       - name: Build Telegram iOS
         script: |
-          bazelisk build \
-            --config=ios_fat \
-            //Telegram:Telegram
-
-      - name: Export IPA
-        script: |
-          mkdir -p build/ipa
-          cp bazel-bin/Telegram/Telegram.ipa build/ipa/Telegram.ipa
-
-    artifacts:
-      - build/ipa/*.ipa
+          ./build-system/build.sh ios
