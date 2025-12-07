@@ -4,10 +4,10 @@ workflows:
     max_build_duration: 120
     environment:
       groups:
-        - certificate_credentials
+        - api_credentials  # Yeh aapka custom group hai jisme API_KEY aur API_HASH hai
       vars:
-        BAZEL_CACHE: "/Users/builder/.bazel-cache"
-      xcode: 15.0
+        API_KEY: "$API_KEY"   # Codemagic environment se API_KEY ko fetch karna
+        API_HASH: "$API_HASH" # Codemagic environment se API_HASH ko fetch karna
 
     scripts:
       - name: Install Bazelisk
