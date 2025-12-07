@@ -1,17 +1,30 @@
-version: 1.0
-
 workflows:
-  ios-workflow:
-    name: Build iOS
-    platform: ios
-    flutter:
-      channel: stable
-    build:
-      ios:
-        flutter: true
-        build_mode: release
-        targets:
-          - app
+  ios_telegram:
+    name: Telegram iOS Bazel Build
+    max_build_duration: 120
     environment:
+      groups:
+        - certificate_credentials
       vars:
-        BUILD_FLAVOR: "prod"
+        BAZEL_CACHE: "/Users/builder/.bazel-cache"
+      xcode: 15.0
+
+    scripts:
+      - name: Install Bazelisk
+        script: |
+          brew install bazelisk
+          bazelisk version
+
+      - name: Build Telegram iOS
+        script: |
+          bazelisk build \
+            --config=ios_fat \
+            //Telegram:Telegram
+
+      - name: Export IPA
+        script: |
+          mkdir -p build/ipa
+          cp bazel-bin/Telegram/Telegram.ipa build/ipa/Telegram.ipa
+
+    artifacts:
+      - build/ipa/*.ipa
